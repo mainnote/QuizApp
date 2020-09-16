@@ -72,3 +72,4 @@ PROJECT TASKS ASSIGNMENT
 Contributors:
 
 George Zhang
+Alex Liu
