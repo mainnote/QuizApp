@@ -5,6 +5,28 @@
 ### We will use reactJS + surveyJS along with backend strapi.
 ### It is about 4 weeks to complete.
 ________________
+Installation
+
+1. Install nodeJS and npm from https://nodejs.org/en/download/
+2. Install yarn from https://classic.yarnpkg.com/en/docs/install/#mac-stable
+3. Install visual studio code from https://code.visualstudio.com/
+4. Install git or github from https://desktop.github.com/
+5. Clone this project to your local with git or github
+6. Now you can use 
+```
+yarn install
+```
+or
+```
+npm install
+```
+7. You are able to start this project with this command
+```
+npm start
+```
+8. Go to folder src/features/ , you should find the pages there to start your coding.
+
+________________
 PROJECT OVERVIEW
 
 Pages
