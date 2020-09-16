@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^4.5.2",
     "cra-template": "1.0.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3",
+    "survey-analytics": "^1.8.2",
+    "survey-react": "^1.8.2"
   },
   "scripts": {
     "start": "react-scripts start",
