@@ -22,6 +22,9 @@ export default function ( props ) {
                     <li className="nav-item">
                         <Link className="nav-link" to="/content">Test Content</Link>
                     </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/content">Test This menu only</Link>
+                    </li>
                 </ul>
                 <form className="form-inline mt-2 mt-md-0">
                     <input className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
