@@ -69,6 +69,21 @@ PROJECT TASKS ASSIGNMENT
 10. save source to github and deployment
 11. Logo design and other image design
 
+_________________________
+API List:
+
+Get all quizes:
+https://33.1122.ca/quizzes
+
+Get all chaters by a quiz:
+https://33.1122.ca/chapters?quiz=5f6a35156254027e53ce24c0
+
+Get all questions by a chapter:
+https://33.1122.ca/questions?chapter=5f6b6daa66863b0c0229d23e&_limit=-1
+
+Reference: https://strapi.io/documentation/3.0.0-beta.x/content-api/parameters.html#available-operators
+
+______________
 Contributors:
 
 George Zhang  Alex Liu  Jason Yang
