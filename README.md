@@ -12,7 +12,7 @@ Installation
 3. Install visual studio code from https://code.visualstudio.com/
 4. Install git or github from https://desktop.github.com/
 5. Clone this project to your local with git or github
-6. Now you can use 
+6. Now you can use (prefer yarn)
 ```
 yarn install
 ```
@@ -21,6 +21,10 @@ or
 npm install
 ```
 7. You are able to start this project with this command
+```
+yarn start
+```
+or
 ```
 npm start
 ```
@@ -85,5 +89,6 @@ Reference: https://strapi.io/documentation/3.0.0-beta.x/content-api/parameters.h
 
 ______________
 Contributors:
-
-George Zhang  Alex Liu  Jason Yang
+- George Zhang
+- Alex Liu
+- Jason Yang
