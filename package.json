@@ -5,7 +5,9 @@
   "dependencies": {
     "axios": "^0.20.0",
     "bootstrap": "^4.5.2",
+    "clsx": "^1.1.1",
     "cra-template": "1.0.3",
+    "font-awesome": "^4.7.0",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

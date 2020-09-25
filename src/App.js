@@ -15,20 +15,22 @@ function App() {
       <Router>
         <div className="page-top">
           <Menu />
-          <Switch>
-            <Route exact path="/">
-              <HomePage />
-            </Route>
-            <Route path="/quiz">
-              <QuizPage />
-            </Route>
-            <Route path="/results">
-              <ResultsPage />
-            </Route>
-            <Route path="/content">
-              <ContentPage />
-            </Route>
-          </Switch>
+          <div className="main">
+            <Switch>
+              <Route exact path="/">
+                <HomePage />
+              </Route>
+              <Route path="/quiz">
+                <QuizPage />
+              </Route>
+              <Route path="/results">
+                <ResultsPage />
+              </Route>
+              <Route path="/content">
+                <ContentPage />
+              </Route>
+            </Switch>
+          </div>
           <Footer />
         </div>
       </Router>
