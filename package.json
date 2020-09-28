@@ -14,7 +14,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "survey-analytics": "^1.8.2",
-    "survey-react": "^1.8.2"
+    "survey-react": "^1.8.2",
+    "webfontloader": "^1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",

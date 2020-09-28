@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import WebFont from 'webfontloader';
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
@@ -7,6 +8,12 @@ import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'font-awesome/css/font-awesome.min.css';
+
+WebFont.load({
+    google: {
+      families: ['Ma Shan Zheng:300,400,700', 'sans-serif']
+    }
+  });
 
 ReactDOM.render(<App />, document.getElementById("root"));
 

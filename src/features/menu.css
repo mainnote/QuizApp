@@ -1,3 +1,15 @@
 .nav-link {
     font-weight: bold;
 }
+
+.bg-color {
+    background-color: #563d7c;
+}
+
+.navbar-brand {
+    font-family: 'Ma Shan Zheng';
+}
+
+.navbar-brand img {
+    vertical-align: bottom;
+}

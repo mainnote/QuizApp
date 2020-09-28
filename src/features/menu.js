@@ -10,8 +10,8 @@ export default function ( props ) {
     LOG( 'DEBUG: Rendering menu with pathname:', pathname );
 
     return (
-        <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <Link className="navbar-brand" to="/">QuizApp</Link>
+        <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-color">
+            <Link className="navbar-brand" to="/"><img src="/favicon-32x32.png" alt="圣经测试" />圣经测试</Link>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon" />
             </button>

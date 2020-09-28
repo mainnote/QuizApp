@@ -29,6 +29,12 @@ function App() {
               <Route path="/content">
                 <ContentPage />
               </Route>
+              <Route path="/privacy">
+                <ContentPage contentKey="privacy" isPost={ false } />
+              </Route>
+              <Route path="/terms">
+                <ContentPage contentKey="terms" isPost={ false } />
+              </Route>
             </Switch>
           </div>
           <Footer />
