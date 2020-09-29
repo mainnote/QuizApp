@@ -5,6 +5,7 @@ import { DEBUG, LOG, API_ALL_QUIZZES, API_ALL_CHAPTERS, API_ALL_QUESTIONS } from
 import ShowJSON from './showJson';
 import { requestGet } from '../stores/request';
 import { Context as QuizContext, ACTION_TYPE, } from '../stores/quizStore';
+import { useParams } from "react-router-dom";
 
 import test_json from '../test_data/test_question1.json';
 
@@ -16,6 +17,9 @@ Survey.defaultBootstrapCss.navigationButton = "btn btn-green";
 
 export default function ( props ) {
     const [ state, dispatch ] = useContext( QuizContext );
+    LOG('DEBUG: (quiz.js) Rednering quiz...');
+    let { quiz_id } = useParams();
+    console.log(quiz_id);
 
     // this is a data loading example only!!!!!!
     useEffect( () => {
@@ -26,7 +30,7 @@ export default function ( props ) {
                 .then( res => {
                     let quizzes_data = res.data;
                     // first quiz
-                    loadChapters( quizzes_data[ 0 ].id ).then( res => {
+                    loadChapters( quiz_id || quizzes_data[ 0 ].id ).then( res => {
                         let chapters_data = res.data;
                         // first chapter
                         loadQuestions( chapters_data[ 0 ].id ).then( res => {
@@ -44,7 +48,7 @@ export default function ( props ) {
             // if not load chapters for first quiz
             LOG( 'chapters', state.chapters )
             if ( state.chapters.length === 0 || !state.chapters.some( c => c.quiz.id === state.quizzes[ 0 ].id ) ) {
-                loadChapters( state.quizzes[ 0 ].id ).then( res => {
+                loadChapters( quiz_id || state.quizzes[ 0 ].id ).then( res => {
                     let chapters_data = res.data;
                     // first chapter
                     loadQuestions( chapters_data[ 0 ].id ).then( res => {
@@ -74,14 +78,14 @@ export default function ( props ) {
         function loadQuizzes() {
             return requestGet( API_ALL_QUIZZES );
         }
-        function loadChapters( quiz_id ) {
-            return requestGet( API_ALL_CHAPTERS + '?quiz=' + quiz_id );
+        function loadChapters( quizId ) {
+            return requestGet( API_ALL_CHAPTERS + '?quiz=' + quizId );
         }
-        function loadQuestions( chapter_id ) {
-            return requestGet( API_ALL_QUESTIONS + '?chapter=' + chapter_id );
+        function loadQuestions( chapterId ) {
+            return requestGet( API_ALL_QUESTIONS + '?chapter=' + chapterId );
         }
 
-    });
+    } );
 
 
     const model = new Survey.Model( test_json );

@@ -2,6 +2,7 @@ import React from 'react';
 import { LOG, } from '../config';
 import './footer.css';
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const getYear = () => {
     return new Date().getFullYear();
@@ -9,15 +10,17 @@ const getYear = () => {
 
 export default function ( props ) {
     LOG('DEBUG: Rendering footer');
+    const { t } = useTranslation();
+    
     return (
         <footer className="footer-distributed container-fluid">
             <div className="row">
                 <div className="footer-left col-sm">
-                    <h3>Chinese<span>Church</span></h3>
+                    <h3>{ t( 'biblestudy' ) }</h3>
                     <p className="footer-links">
-                        <Link className="nav-link" to="/">Home</Link>
-                        <Link className="nav-link" to="/quiz">Quiz</Link>
-                        <Link className="nav-link" to="/results">Results</Link>
+                        <Link className="nav-link" to="/">{ t( 'home' ) }</Link>
+                        <Link className="nav-link" to="/quiz">{ t( 'quiz' ) }</Link>
+                        <Link className="nav-link" to="/results">{ t( 'result' ) }</Link>
                     </p>
 
                 </div>
@@ -49,7 +52,11 @@ export default function ( props ) {
                 </div>
                 
             </div>
-            <p className="footer-company-name row">Chinese Church © { getYear() }</p>
+            <p className="footer-company-name row">
+                Chinese Church © { getYear() }
+                <Link className="nav-link" to="/privacy">{ t( 'privacy' ) }</Link>
+                <Link className="nav-link" to="/terms">{ t( 'terms' ) }</Link>
+            </p>
         </footer>
     );
 };

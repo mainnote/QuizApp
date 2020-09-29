@@ -20,14 +20,14 @@ function App() {
               <Route exact path="/">
                 <HomePage />
               </Route>
-              <Route path="/quiz">
+              <Route path="/quiz/:quiz_id?">
                 <QuizPage />
               </Route>
               <Route path="/results">
                 <ResultsPage />
               </Route>
               <Route path="/content">
-                <ContentPage />
+              <ContentPage contentKey="5f6d23734026e33aa8cbe67c" isPost={ true } />
               </Route>
               <Route path="/privacy">
                 <ContentPage contentKey="privacy" isPost={ false } />
