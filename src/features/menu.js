@@ -29,12 +29,12 @@ export default function ( props ) {
                         <Link className="nav-link" to="/results">{ t( 'result' ) }</Link>
                     </li>
                     <li className={ clsx( 'nav-item', pathname.startsWith( '/content' ) && 'active' ) }>
-                        <Link className="nav-link" to="/content">Test Content</Link>
+                        <Link className="nav-link" to="/content">{ t( 'mark_count' ) }</Link>
                     </li>
                 </ul>
                 <form className="form-inline mt-2 mt-md-0">
-                    <input className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
-                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <input className="form-control mr-sm-2" type="text" placeholder={ t( 'search_placeholder' ) } aria-label="Search" />
+                    <button className="btn btn-outline-warning my-2 my-sm-0" type="submit">{ t( 'search' ) }</button>
                 </form>
             </div>
         </nav>

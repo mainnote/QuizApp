@@ -1,6 +1,14 @@
+body {
+  font-family: 'Noto Sans SC', 'Roboto'!important;
+}
+
 .page-top {
   margin-top: 60px;
 }
 .main {
   min-height: 60vh;
+}
+
+.main > .container {
+  background-color: #ffffffb5;
 }

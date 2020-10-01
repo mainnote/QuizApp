@@ -2,13 +2,9 @@ import { createStore } from './createStore';
 import { LOG } from '../config';
 
 const initialState = {
-    quizzes: [],
-    chapters: [],
-    questions: [],
+    posts: [],
     current_index: {
-        quizzes: -1,
-        chapters: -1,
-        questions: -1,
+        posts: -1,
     },
 };
 
@@ -20,7 +16,7 @@ const ACTION_TYPE = {
 };
 
 const Reducer = ( state, action ) => {
-    LOG( 'Reducer: quizzes, action: ', action );
+    LOG( 'Reducer: posts, action: ', action );
 
     switch ( action.type ) {
         case ACTION_TYPE.ADD:

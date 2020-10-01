@@ -9,9 +9,9 @@ const getYear = () => {
 }
 
 export default function ( props ) {
-    LOG('DEBUG: Rendering footer');
+    LOG( 'DEBUG: Rendering footer' );
     const { t } = useTranslation();
-    
+
     return (
         <footer className="footer-distributed container-fluid">
             <div className="row">
@@ -27,35 +27,36 @@ export default function ( props ) {
                 <div className="footer-center col-sm">
                     <div>
                         <i className="fa fa-map-marker" />
-                        <p><span>Clagay, Alberta</span> Canada</p>
+                        <p><span>{ t( 'address' ) }</span> CANADA</p>
                     </div>
                     <div>
                         <i className="fa fa-phone" />
-                        <p>123-456-789</p>
+                        <p>{ t( 'phonenumber' ) }</p>
                     </div>
                     <div>
                         <i className="fa fa-envelope" />
-                        <p><a href="abc@example.com">abc@example.com</a></p>
+                        <p><a href={ t( 'email' ) }>{ t( 'email' ) }</a></p>
                     </div>
                 </div>
                 <div className="footer-right col-sm">
                     <p className="footer-company-about">
-                        <span>About us</span>
-                    A small and brief description of the app should go here.
-                </p>
+                        <span>{ t( 'aboutus' ) }</span>
+                        { t( 'aboutus_content' ) }
+                    </p>
                     <div className="footer-icons">
                         <a href="https://www.facebook.com/"><i className="fa fa-facebook" /></a>
                         <a href="https://twitter.com/"><i className="fa fa-twitter" /></a>
                         <a href="https://www.youtube.com/"><i className="fa fa-youtube" /></a>
                         <a href="https://www.instagram.com/"><i className="fa fa-instagram" /></a>
+                        <a href="https://www.instagram.com/"><i className="fa fa-weixin"></i></a>
                     </div>
                 </div>
-                
+
             </div>
             <p className="footer-company-name row">
-                Chinese Church © { getYear() }
-                <Link className="nav-link" to="/privacy">{ t( 'privacy' ) }</Link>
-                <Link className="nav-link" to="/terms">{ t( 'terms' ) }</Link>
+                { t( 'biblestudy' ) } © { getYear() }
+                <Link className="pl-2" to="/privacy">{ t( 'privacy' ) }</Link>
+                <Link className="pl-2" to="/terms">{ t( 'terms' ) }</Link>
             </p>
         </footer>
     );
