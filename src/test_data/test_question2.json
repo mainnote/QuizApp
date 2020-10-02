@@ -1,0 +1,32 @@
+{
+    "title": "测试300题",
+    "showProgressBar": "bottom",
+    "showTimerPanel": "top",
+    "firstPageIsStarted": true,
+    "startSurveyText": "测试开始",
+    "pages": [
+       {
+          "elements": [
+             {
+                "type": "html",
+                "html": "这是题目说明"
+             }
+          ]
+       },
+       {
+          "elements": [
+             {
+                "type": "checkbox",
+                "name": "civilwar",
+                "title": "<b>When</b> <u>was</u> the Civil <a href=\"#\">War</a>?",
+                "choices": [
+                  {"value": "a", "text": "a. choice 1"},
+                  {"value": "b", "text": "b. choice 2"}
+                ],
+                "correctAnswer": "a"
+             }
+          ]
+       }
+    ],
+    "completedHtml": "完成了呀"
+ }

@@ -22,9 +22,6 @@ export default function ( props ) {
                     <li className={ clsx( 'nav-item', pathname === '/' && 'active' ) }>
                         <Link className="nav-link" to="/">{ t( 'home' ) }</Link>
                     </li>
-                    <li className={ clsx( 'nav-item', pathname.startsWith( '/quiz' ) && 'active' ) }>
-                        <Link className="nav-link" to="/quiz">{ t( 'quiz' ) }</Link>
-                    </li>
                     <li className={ clsx( 'nav-item', pathname.startsWith( '/results' ) && 'active' ) }>
                         <Link className="nav-link" to="/results">{ t( 'result' ) }</Link>
                     </li>
