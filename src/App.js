@@ -9,6 +9,7 @@ import QuizPage from './features/quiz';
 import ResultsPage from './features/results';
 import Footer from './features/footer';
 import ContentPage from './features/content';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 
 function App() {
   return (

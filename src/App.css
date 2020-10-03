@@ -12,3 +12,6 @@ body {
 .main > .container {
   background-color: #ffffffb5;
 }
+.loader {
+  text-align: center;
+}

@@ -7,6 +7,8 @@ import { requestGet } from '../stores/request';
 import { Context as QuizContext, ACTION_TYPE, } from '../stores/quizStore';
 import { useParams } from "react-router-dom";
 import { stateToSurveyJS } from '../stores/util';
+import { isEmpty } from 'lodash';
+import Loader from 'react-loader-spinner';
 
 // import test_json from '../test_data/test_question2.json';
 
@@ -37,7 +39,7 @@ export default function ( props ) {
             function loadChapters( quizId ) {
                 if ( state.chapters.length === 0 ||
                     !state.chapters.some( c => c.quiz.id === quiz_id ) ) {
-                    return requestGet( API_ALL_CHAPTERS + '?quiz=' + quizId + '&_limit=-1' );
+                    return requestGet( API_ALL_CHAPTERS + '?quiz=' + quizId + '&_limit=-1&_sort=chapter_no:ASC' );
                 } else {
                     return Promise.resolve( { data: [] } );
                 }
@@ -47,7 +49,7 @@ export default function ( props ) {
             function loadQuestions( quizId ) {
                 if ( state.questions.length === 0
                     || !state.questions.some( q => q.chapter.quiz === quiz_id ) ) {
-                    return requestGet( API_ALL_QUESTIONS + '?chapter.quiz=' + quizId + '&_limit=-1' );
+                    return requestGet( API_ALL_QUESTIONS + '?chapter.quiz=' + quizId + '&_limit=-1&_sort=question_no:ASC' );
                 } else {
                     return Promise.resolve( { data: [] } );
                 }
@@ -62,44 +64,98 @@ export default function ( props ) {
                         LOG( 'questions:', res2.data )
                         dispatch( {
                             type: ACTION_TYPE.ADD_ALL,
+                            quizId: quiz_id,
                             keys: [ 'quizzes', 'chapters', 'questions' ],
                             data: [ res0.data, res1.data, res2.data ],
                         } );
-
-                        dispatch({
-                            type: ACTION_TYPE.UPDATE_CURRENT_INDEX,
-                            key: 'quizzes',
-                            index: quiz_id,
-                        });
                     } );
                 } );
             } );
         }
     }, [ quiz_id ] );
 
+    const [ survey_json, nextChapter ] = stateToSurveyJS( state );
+    let content;
 
-    const model = new Survey.Model( stateToSurveyJS(state) );
-    model.locale = 'zh-cn';
-    model.onTextMarkdown.add( function ( survey, options ) {
-        options.html = options.text;
-    } );
+    if ( isEmpty( survey_json ) ) {
+        content = (
+            <Loader
+                className="loader"
+                type="Hearts"
+                color="pink"
+                height={ 100 }
+                width={ 100 }
+            />
+        );
+    } else {
+        const model = new Survey.Model( survey_json );
+        model.locale = 'zh-cn';
+        model.onTextMarkdown.add( function ( survey, options ) {
+            options.html = options.text;
+        } );
+        // model.showPreviewBeforeComplete = 'showAnsweredQuestions';
 
-    const onValueChanged = ( result ) => {
-        console.log( "value changed!" );
-    };
+        // this chapter is completed
+        if ( state.current_result ) {
+            model.mode = 'display';
+            LOG( "Result:", state.current_result );
+            model.data = state.current_result;
+            model.onAfterRenderQuestion
+                .add( function ( survey, options ) {
+                    var span = document.createElement( "span" );
+                    var isCorrect = options.question.isAnswerCorrect();
+                    span.innerHTML = isCorrect ? "Correct" : "Incorrect";
+                    span.style.color = isCorrect ? "green" : "red";
+                    var header = options
+                        .htmlElement
+                        .querySelector( "h5" );
+                    if ( !isCorrect ) {
+                        header.style.backgroundColor = "salmon";
+                        var answers = options.question.correctAnswer;
+                        if ( options.question.getType() === "radiogroup" ) {
+                            answers = [ answers ];
+                        }
+                        for ( var i = 0; i < answers.length; i++ ) {
+                            var item = options
+                                .htmlElement.querySelector( 'input[value="' + answers[ i ] + '"]' );
+                            if ( !!item ) {
+                                item.parentElement.style.color = "green";
+                            }
+                        }
+                    }
+                    header.appendChild( span );
+                } );
 
-    const onComplete = ( result ) => {
-        console.log( result.data );
-    };
 
+            content = (
+                <Survey.Survey
+                    model={ model }
+                />
+            );
+        } else {
+            const onValueChanged = ( result ) => {
+                console.log( "value changed!" );
+            };
+
+            const onComplete = ( result ) => {
+                console.log( result.data );
+                dispatch( {
+                    type: ACTION_TYPE.SET_IS_COMPLETED,
+                    value: result.data,
+                } );
+            };
+            content = (
+                <Survey.Survey
+                    model={ model }
+                    onComplete={ onComplete }
+                    onValueChanged={ onValueChanged }
+                />
+            );
+        }
+    }
     return (
         <div className="container">
-            <Survey.Survey
-                model={ model }
-                onComplete={ onComplete }
-                onValueChanged={ onValueChanged }
-            />
-
+            { content }
             { DEBUG && <ShowJSON data={ state.questions } /> }
         </div>
     );
