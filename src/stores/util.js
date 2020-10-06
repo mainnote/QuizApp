@@ -1,5 +1,11 @@
 import { template } from 'lodash';
-import { DEBUG, LOG } from '../config';
+import {
+    DEBUG, LOG, DEBUG_NUM,
+    API_ALL_QUIZZES, API_ALL_CHAPTERS, API_ALL_QUESTIONS,
+    API_ALL_BOOKS
+} from '../config';
+import { requestGet } from '../stores/request';
+import { ACTION_TYPE, } from '../stores/quizStore';
 
 const chapterHtml = template( '<h5><%= title %></h5><p><%= duration %></p><p><%= reminds %></p><div class="h6"><%= description %></div>' );
 const findChapters = ( state, quiz_id ) => {
@@ -24,7 +30,6 @@ const findNextChapter = ( state, quiz_id ) => {
     return null;
 };
 
-
 const stateToSurveyJS = state => {
     let quiz_id = state.current_index.quizzes;
     let chapter_id = state.current_index.chapters;
@@ -41,7 +46,7 @@ const stateToSurveyJS = state => {
             "showProgressBar": isResult ? "off" : "bottom",
             "showTimerPanel": isResult ? "none" : "top",
             "firstPageIsStarted": isResult ? false : true,
-            "startSurveyText": "测试开始",
+            "startSurveyText": "测试开始", // TODO: move it to i18n.js
             "pages": [],
             "showCompletedPage": false,
             "showQuestionNumbers": "off",
@@ -64,7 +69,7 @@ const stateToSurveyJS = state => {
                 }
 
                 let questions = state.questions.filter( q => q.chapter.id === c.id ).sort( ( a, b ) => a.question_no - b.question_no );
-                if ( DEBUG ) questions = questions.slice( 0, 1 );
+                if ( DEBUG ) questions = questions.slice( 0, DEBUG_NUM );
 
                 questions.forEach( q => {
                     let choices = [];
@@ -92,7 +97,7 @@ const stateToSurveyJS = state => {
                 isNext = true;
             }
 
-            if ( isNext ) {
+            else if ( isNext ) {
                 isNext = false;
                 nextChapter = c.id;
             }
@@ -104,6 +109,70 @@ const stateToSurveyJS = state => {
     }
 };
 
+const loadQuizFull = ( state, dispatch, quiz_id ) => {
+    // if not load the quizzes, first chapter and the questions of the first chapter
+    if ( quiz_id ) {
+        // load functions
+        function loadBooks() {
+            if ( state.books.length === 0 ) {
+                return requestGet( API_ALL_BOOKS + '?_limit=-1' );
+            } else {
+                return Promise.resolve( { data: [] } );
+            }
+        }
+
+        // all quizzes
+        function loadQuizzes() {
+            if ( state.quizzes.length === 0 ) {
+                return requestGet( API_ALL_QUIZZES + '?_limit=-1' );
+            } else {
+                return Promise.resolve( { data: [] } );
+            }
+        }
+        // all chapters for this quiz
+        function loadChapters( quizId ) {
+            if ( state.chapters.length === 0 ||
+                !state.chapters.some( c => c.quiz.id === quiz_id ) ) {
+                return requestGet( API_ALL_CHAPTERS + '?quiz=' + quizId + '&_limit=-1&_sort=chapter_no:ASC' );
+            } else {
+                return Promise.resolve( { data: [] } );
+            }
+
+        }
+        // all questions for this quiz
+        function loadQuestions( quizId ) {
+            if ( state.questions.length === 0
+                || !state.questions.some( q => q.chapter.quiz === quiz_id ) ) {
+                return requestGet( API_ALL_QUESTIONS + '?chapter.quiz=' + quizId + '&_limit=-1&_sort=question_no:ASC' );
+            } else {
+                return Promise.resolve( { data: [] } );
+            }
+        }
+
+        // process
+        loadBooks().then( res_books => {
+            LOG( 'books:', res_books.data )
+            return loadQuizzes().then( res0 => {
+                LOG( 'quizzes:', res0.data )
+                return loadChapters( quiz_id ).then( res1 => {
+                    LOG( 'chapters:', res1.data )
+                    return loadQuestions( quiz_id ).then( res2 => {
+                        LOG( 'questions:', res2.data )
+                        dispatch( {
+                            type: ACTION_TYPE.ADD_ALL,
+                            quizId: quiz_id,
+                            keys: [ 'books', 'quizzes', 'chapters', 'questions' ],
+                            data: [ res_books.data, res0.data, res1.data, res2.data ],
+                        } );
+                    } );
+                } );
+            } );
+        } );
+    }
+};
+
+
+
 export {
-    stateToSurveyJS, findChapters, findNextChapter
+    stateToSurveyJS, findChapters, findNextChapter, loadQuizFull
 };

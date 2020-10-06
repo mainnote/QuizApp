@@ -6,12 +6,14 @@ const initialState = {
     quizzes: [],
     chapters: [],
     questions: [],
+    books: [],
     current_index: {
         quizzes: -1,
         chapters: -1,
-        questions: -1,
+        // questions: -1, // not in use
     },
     current_result: null,
+    chapter_results: {},
 };
 
 const ACTION_TYPE = {
@@ -19,12 +21,14 @@ const ACTION_TYPE = {
     ADD_ALL: 'ADD_ALL',
     UPDATE_INIT_INDICE: 'UPDATE_INIT_INDICE',
     UPDATE_CURRENT_INDEX: 'UPDATE_CURRENT_INDEX',
-    SET_IS_COMPLETED: 'SET_IS_COMPLETED',
+    SET_CURRENT_RESULT: 'SET_IS_COMPLETED',
     RESET: 'RESET',
+    SET_NEXT_CHAPTER: 'SET_NEXT_CHAPTER',
 };
 
 const Reducer = ( state, action ) => {
     LOG( 'Reducer: quizzes, action: ', action );
+    LOG( 'Reducer: state: ', state );
 
     switch ( action.type ) {
         case ACTION_TYPE.ADD:
@@ -90,10 +94,23 @@ const Reducer = ( state, action ) => {
                 },
                 current_result: null,
             };
-        case ACTION_TYPE.SET_IS_COMPLETED:
+        case ACTION_TYPE.SET_CURRENT_RESULT:
             return {
                 ...state,
                 current_result: action.value,
+                chapter_results: {
+                    ...state.chapter_results,
+                    [state.current_index.chapters]: action.value,
+                },
+            };
+        case ACTION_TYPE.SET_NEXT_CHAPTER:
+            return {
+                ...state,
+                current_index: {
+                    ...state.current_index,
+                    chapters: action.nextChapter,
+                },
+                current_result: null,
             };
         default:
             return state;

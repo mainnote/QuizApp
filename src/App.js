@@ -26,7 +26,7 @@ function App() {
                 <Route path="/quiz/:quiz_id?">
                   <QuizPage />
                 </Route>
-                <Route path="/results">
+                <Route path="/results/:quiz_id?">
                   <ResultsPage />
                 </Route>
                 <Route path="/content/:post_id?">

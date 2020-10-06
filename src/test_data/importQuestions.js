@@ -5,6 +5,19 @@ const BASE_URL = 'https://33.1122.ca/'
 const QUIZ_ID = "5f6a35156254027e53ce24c0"
 
 //axios.get( BASE_URL + 'quizzes').then(res => console.log(res.data))
+let BOOKS;
+
+function array2dict(data){
+    let result = {}
+    data.forEach( item =>
+        result[item.title] = item.id
+    );
+    return result
+}
+
+async function getBooks() {
+    return await axios.get( BASE_URL + 'books');
+}
 
 async function addChapter( chapter, index ) {
     console.log( chapter.Title + ' is loading......' );
@@ -29,11 +42,14 @@ async function addQuestion( chapter_id, question ) {
         }
     } )
 
+    let books = question.Books.map(book => BOOKS[book])
+
     return await axios.post( BASE_URL + 'questions', {
         "chapter": chapter_id,
         "question_no": question_no,
         "question_content": question.Question_Title,
-        "choice": choices
+        "choice": choices,
+        "books": books
     } );
 }
 
@@ -55,6 +71,8 @@ function promiseRun() {
 }
 
 async function run() {
+    BOOKS = array2dict((await getBooks()).data)
+
     let len = init_data.surveyChapters.length;
     for ( let i = 0; i < len; i++ ) {
         let chapter = init_data.surveyChapters[ i ];

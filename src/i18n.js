@@ -6,23 +6,31 @@ import { initReactI18next } from "react-i18next";
 const resources = {
     zh: {
         translation: {
-            'biblestudy' : '圣经知识测试网',
+            'biblestudy': '圣经知识测试网',
             'home': '主页',
             'quiz': '测试',
             'result': '统计',
-            'terms' : '免责声明',
+            'terms': '免责声明',
             'privacy': '隐私政策',
-            'start':'开始测试',
+            'start': '开始测试',
             'new_quiz': '最新测试题目',
             'aboutus': '关于我们',
             'aboutus_content': '我们致力于信徒对圣经知识的提高而努力。',
-            'address' : '8810-65 AVE NW, EDMONTON, AB T6E 0J7',
+            'address': '8810-65 AVE NW, EDMONTON, AB T6E 0J7',
             'phonenumber': '(780) 465-3222',
             'email': 'learn@eccc.ca',
             'search': '搜索',
             'search_placeholder': '我想找......',
             'mark_count': '记分方法',
             'new_post': '最新推荐阅读',
+            'next_chapter': '继续测试下一节',
+            'redo': '重新测试这一章',
+            'all_answers': '显示所有答案',
+            'wrong_answers': '仅显示错误答案',
+            'result_text': '共<%= total %>题目里，答对了<%= corrected %>道题。',
+            'right': '正确',
+            'wrong': '再想想',
+            'check_result': '查看总成绩',
         }
     }
 };

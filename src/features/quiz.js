@@ -1,77 +1,29 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import * as Survey from 'survey-react';
 import "survey-react/survey.css";
-import { DEBUG, LOG, API_ALL_QUIZZES, API_ALL_CHAPTERS, API_ALL_QUESTIONS } from '../config';
+import { DEBUG, LOG } from '../config';
 import ShowJSON from './showJson';
-import { requestGet } from '../stores/request';
 import { Context as QuizContext, ACTION_TYPE, } from '../stores/quizStore';
 import { useParams } from "react-router-dom";
-import { stateToSurveyJS } from '../stores/util';
-import { isEmpty } from 'lodash';
+import { stateToSurveyJS, loadQuizFull } from '../stores/util';
+import { isEmpty, template } from 'lodash';
 import Loader from 'react-loader-spinner';
-
-// import test_json from '../test_data/test_question2.json';
-
+import { useTranslation } from 'react-i18next';
+import { Link } from "react-router-dom";
 
 Survey.StylesManager.applyTheme( "darkblue" );
-// Survey.defaultBootstrapCss.navigationButton = "btn btn-green";
 
 export default function ( props ) {
+    const [ showWrong, setShowWrong ] = useState( false );
+    const { t } = useTranslation();
     const [ state, dispatch ] = useContext( QuizContext );
     LOG( 'DEBUG: (quiz.js) Rednering quiz...' );
     let { quiz_id } = useParams();
     console.log( quiz_id );
 
-    // this is a data loading example only!!!!!!
+    // load related data for this quiz
     useEffect( () => {
-        // if not load the quizzes, first chapter and the questions of the first chapter
-        if ( quiz_id ) {
-            // load functions
-            // all quizzes
-            function loadQuizzes() {
-                if ( state.quizzes.length === 0 ) {
-                    return requestGet( API_ALL_QUIZZES + '?_limit=-1' );
-                } else {
-                    return Promise.resolve( { data: [] } );
-                }
-            }
-            // all chapters for this quiz
-            function loadChapters( quizId ) {
-                if ( state.chapters.length === 0 ||
-                    !state.chapters.some( c => c.quiz.id === quiz_id ) ) {
-                    return requestGet( API_ALL_CHAPTERS + '?quiz=' + quizId + '&_limit=-1&_sort=chapter_no:ASC' );
-                } else {
-                    return Promise.resolve( { data: [] } );
-                }
-
-            }
-            // all questions for this quiz
-            function loadQuestions( quizId ) {
-                if ( state.questions.length === 0
-                    || !state.questions.some( q => q.chapter.quiz === quiz_id ) ) {
-                    return requestGet( API_ALL_QUESTIONS + '?chapter.quiz=' + quizId + '&_limit=-1&_sort=question_no:ASC' );
-                } else {
-                    return Promise.resolve( { data: [] } );
-                }
-            }
-
-            // process
-            loadQuizzes().then( res0 => {
-                LOG( 'quizzes:', res0.data )
-                return loadChapters( quiz_id ).then( res1 => {
-                    LOG( 'chapters:', res1.data )
-                    return loadQuestions( quiz_id ).then( res2 => {
-                        LOG( 'questions:', res2.data )
-                        dispatch( {
-                            type: ACTION_TYPE.ADD_ALL,
-                            quizId: quiz_id,
-                            keys: [ 'quizzes', 'chapters', 'questions' ],
-                            data: [ res0.data, res1.data, res2.data ],
-                        } );
-                    } );
-                } );
-            } );
-        }
+        loadQuizFull( state, dispatch, quiz_id );
     }, [ quiz_id ] );
 
     const [ survey_json, nextChapter ] = stateToSurveyJS( state );
@@ -93,22 +45,24 @@ export default function ( props ) {
         model.onTextMarkdown.add( function ( survey, options ) {
             options.html = options.text;
         } );
-        // model.showPreviewBeforeComplete = 'showAnsweredQuestions';
 
         // this chapter is completed
         if ( state.current_result ) {
             model.mode = 'display';
             LOG( "Result:", state.current_result );
             model.data = state.current_result;
+            model.questionsOnPageMode = "singlePage";
             model.onAfterRenderQuestion
                 .add( function ( survey, options ) {
+                    LOG( 'After rendering question....' );
                     var span = document.createElement( "span" );
                     var isCorrect = options.question.isAnswerCorrect();
-                    span.innerHTML = isCorrect ? "Correct" : "Incorrect";
-                    span.style.color = isCorrect ? "green" : "red";
+                    span.innerHTML = isCorrect ? ` (${ t( 'right' ) })` : ` (${ t( 'wrong' ) })`;
+                    span.style.color = isCorrect ? "green" : "white";
                     var header = options
                         .htmlElement
                         .querySelector( "h5" );
+                    // for incorrect answer, hightlight question
                     if ( !isCorrect ) {
                         header.style.backgroundColor = "salmon";
                         var answers = options.question.correctAnswer;
@@ -120,17 +74,67 @@ export default function ( props ) {
                                 .htmlElement.querySelector( 'input[value="' + answers[ i ] + '"]' );
                             if ( !!item ) {
                                 item.parentElement.style.color = "green";
+                                item.parentElement.style.padding = '4px'
+                                item.parentElement.style.border = 'thick solid green';
                             }
                         }
+                    } else {
+                        if ( showWrong )
+                            options.htmlElement.style.display = 'none';
                     }
                     header.appendChild( span );
                 } );
 
+            let compiled = template( t( 'result_text' ) );
+            let result_text = compiled( {
+                total: model.getQuizQuestionCount(),
+                corrected: model.getCorrectedAnswerCount()
+            } );
 
             content = (
-                <Survey.Survey
-                    model={ model }
-                />
+                <React.Fragment>
+                    <div className="row">
+                        <div className="col pt-4 text-center text-success h5">
+                            { result_text }
+                        </div>
+                    </div>
+                    <div className="row pt-4">
+                        <div className="col-md text-center m-2">
+                            { nextChapter ? (
+                                <button className="btn btn-success" onClick={ () => {
+                                    dispatch( {
+                                        type: ACTION_TYPE.SET_NEXT_CHAPTER,
+                                        nextChapter: nextChapter,
+                                    } );
+                                } }>{ t( 'next_chapter' ) }</button>
+                            ) : (
+                                    <Link className="btn btn-success" to={ `/results/${ quiz_id }` }>{ t( 'check_result' ) }</Link>
+                                )
+                            }
+                        </div>
+                        <div className="col-md text-center m-2">
+                            <button className="btn btn-outline-secondary" onClick={ () => {
+                                dispatch( {
+                                    type: ACTION_TYPE.SET_CURRENT_RESULT,
+                                    value: null,
+                                } );
+
+                            } }>{ t( 'redo' ) }</button>
+                        </div>
+                        <div className="col-md text-center m-2">
+                            <label className="switch">
+                                <input type="checkbox" onChange={ () => { setShowWrong( !showWrong ) } } />
+                                <span className="slider round"></span>
+                            </label>
+                            <span className="ml-2 text-secondary">{ t( 'wrong_answers' ) }</span>
+                        </div>
+
+                    </div>
+                    <Survey.Survey
+                        key={ Math.random() }
+                        model={ model }
+                    />
+                </React.Fragment>
             );
         } else {
             const onValueChanged = ( result ) => {
@@ -140,7 +144,7 @@ export default function ( props ) {
             const onComplete = ( result ) => {
                 console.log( result.data );
                 dispatch( {
-                    type: ACTION_TYPE.SET_IS_COMPLETED,
+                    type: ACTION_TYPE.SET_CURRENT_RESULT,
                     value: result.data,
                 } );
             };
@@ -156,7 +160,7 @@ export default function ( props ) {
     return (
         <div className="container">
             { content }
-            { DEBUG && <ShowJSON data={ state.questions } /> }
+            { false && <ShowJSON data={ state.questions } /> }
         </div>
     );
 };
