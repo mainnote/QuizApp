@@ -12,6 +12,10 @@ const requestGetWithDispatch = ( dispatch, url, type, key ) => {
     } );
 }
 
+const requestPost = (url, data) => {
+    return axios.post(url, data);
+}
+
 export {
-    requestGet, requestGetWithDispatch
+    requestGet, requestGetWithDispatch, requestPost,
 }

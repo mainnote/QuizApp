@@ -27,6 +27,7 @@ export default function ( props ) {
 
     return (
         <div className="container">
+
             <div>
                 <XYPlot width={ 600 } height={ 300 } yType="ordinal" xDomain={ [ 0, 100 ] }>
                     <VerticalGridLines />

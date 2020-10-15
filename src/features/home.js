@@ -64,7 +64,7 @@ export default function ( props ) {
             ) )
 
             }
-            { false && <ShowJSON data={ statePost.posts } /> }
+            { DEBUG && <ShowJSON data={ statePost.posts } /> }
         </div>
     );
 };

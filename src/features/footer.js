@@ -35,7 +35,7 @@ export default function ( props ) {
                     </div>
                     <div>
                         <i className="fa fa-envelope" />
-                        <p><a href={ t( 'email' ) }>{ t( 'email' ) }</a></p>
+                        <p><a href={ t( 'contact_email' ) }>{ t( 'email' ) }</a></p>
                     </div>
                 </div>
                 <div className="footer-right col-sm">

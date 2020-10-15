@@ -1,4 +1,4 @@
-export const DEBUG = process.env.REACT_APP_DEBUG;
+export const DEBUG = (process.env.REACT_APP_DEBUG === 'true');
 export const LOG = (...messages) => {
     if (DEBUG) console.log(...messages);
 };
@@ -11,3 +11,6 @@ export const API_ALL_CHAPTERS = BASE_API + 'chapters/';
 export const API_ALL_QUESTIONS = BASE_API + 'questions/';
 export const API_ALL_POSTS = BASE_API + 'posts/';
 export const API_ALL_BOOKS = BASE_API + 'books/';
+
+export const REGISTER_URL = BASE_API + 'auth/local/register';
+export const LOGIN_URL = BASE_API + 'auth/local';

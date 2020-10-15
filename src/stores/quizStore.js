@@ -12,8 +12,8 @@ const initialState = {
         chapters: -1,
         // questions: -1, // not in use
     },
-    current_result: null,
-    chapter_results: {},
+    current_result: null, // here the result is the answer of each question
+    chapter_results: {}, // here the result is the answer of each question
 };
 
 const ACTION_TYPE = {
