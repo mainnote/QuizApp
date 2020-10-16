@@ -2,9 +2,9 @@ import { template } from 'lodash';
 import {
     DEBUG, LOG, DEBUG_NUM,
     API_ALL_QUIZZES, API_ALL_CHAPTERS, API_ALL_QUESTIONS,
-    API_ALL_BOOKS
+    API_ALL_BOOKS, API_ALL_RESULTS,
 } from '../config';
-import { requestGet } from '../stores/request';
+import { requestGet, requestPost } from '../stores/request';
 import { ACTION_TYPE, } from '../stores/quizStore';
 
 const chapterHtml = template( '<h5><%= title %></h5><p><%= duration %></p><p><%= reminds %></p><div class="h6"><%= description %></div>' );
@@ -171,8 +171,20 @@ const loadQuizFull = ( state, dispatch, quiz_id ) => {
     }
 };
 
+function getWebsiteState( state, key ) {
+    if ( state.website && state.website[ key ] && state.website[ key ].length > 0 )
+        return state.website[ key ];
+    return null;
+}
 
+const sendResultAPI = ( jwt, result ) => {
+    return requestPost( API_ALL_RESULTS, result, {
+        headers: {
+            'Authorization': 'Bearer ' + jwt
+        }
+    } );
+};
 
 export {
-    stateToSurveyJS, findChapters, findNextChapter, loadQuizFull
+    stateToSurveyJS, findChapters, findNextChapter, loadQuizFull, getWebsiteState, sendResultAPI,
 };

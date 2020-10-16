@@ -26,10 +26,10 @@ export default function ( props ) {
     }, [ quiz_id ] );
 
     return (
-        <div className="container">
+        <div className="container overflow-hidden">
 
             <div>
-                <XYPlot width={ 600 } height={ 300 } yType="ordinal" xDomain={ [ 0, 100 ] }>
+                <XYPlot width={ 300 } height={ 300 } yType="ordinal" xDomain={ [ 0, 100 ] }>
                     <VerticalGridLines />
                     <XAxis />
                     <YAxis />

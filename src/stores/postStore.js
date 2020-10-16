@@ -3,15 +3,11 @@ import { LOG } from '../config';
 
 const initialState = {
     posts: [],
-    current_index: {
-        posts: -1,
-    },
 };
 
 const ACTION_TYPE = {
     ADD: 'ADD',
     ADD_ALL: 'ADD_ALL',
-    UPDATE_CURRENT_INDEX: 'UPDATE_CURRENT_INDEX',
     RESET: 'RESET',
 };
 
@@ -42,24 +38,6 @@ const Reducer = ( state, action ) => {
                 ...state,
                 ...all_values,
             }
-
-        case ACTION_TYPE.UPDATE_CURRENT_INDEX:
-            return {
-                ...state,
-                current_index: {
-                    ...state.current_index,
-                    [ action.key ]: action.index,
-                },
-            };
-        case ACTION_TYPE.RESET:
-            return {
-                ...state,
-                [ action.key ]: [],
-                current_index: {
-                    ...state.current_index,
-                    [ action.key ]: -1,
-                },
-            };
         default:
             return state;
     }

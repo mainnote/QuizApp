@@ -17,6 +17,9 @@ export default function ( props ) {
     const [ stateQuiz, dispatchQuiz ] = useContext( QuizContext );
     const [ statePost, dispatchPost ] = useContext( PostContext );
 
+    // published post
+    let posts = statePost.posts.filter(post => post.published);
+
     // first load must dispatch together
     useEffect( () => {
         LOG( 'Calling useEffect...' );
@@ -27,15 +30,16 @@ export default function ( props ) {
             requestGetWithDispatch( dispatchQuiz, API_ALL_QUIZZES, ACTION_TYPE_QUIZ.ADD, 'quizzes' );
         }
 
-        if ( statePost.posts.length === 0 && !API_MANAGER.posts ) {
+        if ( posts.length === 0 && !API_MANAGER.posts ) {
             LOG( 'Requesting Posts' );
             API_MANAGER.posts = true;
-            requestGetWithDispatch( dispatchPost, API_ALL_POSTS, ACTION_TYPE_POST.ADD, 'posts' );
+            requestGetWithDispatch( dispatchPost, API_ALL_POSTS + '?published=true', ACTION_TYPE_POST.ADD, 'posts' );
         }
-    });
+    }, [] );
+
 
     return (
-        <div className="container">
+        <div className="container overflow-hidden p-4">
             <h3>{ t( 'new_quiz' ) }</h3>
             { stateQuiz.quizzes.length > 0 && stateQuiz.quizzes.map( quiz => (
                 <div className="card" style={ { width: '18rem' } } key={ quiz.id }>
@@ -50,21 +54,25 @@ export default function ( props ) {
             ) )
 
             }
-            <hr />
-            <h3>{ t( 'new_post' ) }</h3>
-            { statePost.posts.length > 0 && statePost.posts.map( post => (
-                <Link className="card btn" style={ { width: '18rem' } } key={ post.id } to={ `/content/${ post.id }` }>
-                    { post.thumbnail && post.thumbnail.url &&
-                        <img className="card-img-top img-thumbnail" src={ post.thumbnail.formats.small.url } alt={ post.title } />
-                    }
-                    <div className="card-body">
-                        <h5 className="card-title">{ post.title }</h5>
-                    </div>
-                </Link>
-            ) )
+            { posts.length > 0 &&
+                <React.Fragment>
+                    <hr />
+                    <h3>{ t( 'new_post' ) }</h3>
+                    { posts.length > 0 && posts.map( post => (
+                        <Link className="card btn" style={ { width: '18rem' } } key={ post.id } to={ `/content/${ post.id }` }>
+                            { post.image && post.image.url &&
+                                <img className="card-img-top img-thumbnail" src={ post.image.formats.small.url } alt={ post.title } />
+                            }
+                            <div className="card-body">
+                                <h5 className="card-title">{ post.title }</h5>
+                            </div>
+                        </Link>
+                    ) )
 
+                    }
+                </React.Fragment>
             }
-            { DEBUG && <ShowJSON data={ statePost.posts } /> }
+            { false && <ShowJSON data={ statePost.posts } /> }
         </div>
     );
 };

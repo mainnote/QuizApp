@@ -7,13 +7,13 @@ const requestGet = ( url ) => {
 
 const requestGetWithDispatch = ( dispatch, url, type, key ) => {
     return requestGet( url ).then( ( { data } ) => {
-        if ( data.length > 0 )
+        if ( data )
             dispatch( { type: type, key: key, data } );
     } );
 }
 
-const requestPost = (url, data) => {
-    return axios.post(url, data);
+const requestPost = ( url, data, config ) => {
+    return axios.post( url, data, config || {} );
 }
 
 export {
