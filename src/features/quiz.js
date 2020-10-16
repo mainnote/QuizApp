@@ -38,6 +38,8 @@ export default function ( props ) {
         loadQuizFull( stateQuiz, dispatchQuiz, quiz_id );
     }, [ quiz_id ] );
 
+    LOG('Before: stateQuiz = ', stateQuiz);
+    
     const [ survey_json, nextChapter ] = stateToSurveyJS( stateQuiz );
     let content;
 

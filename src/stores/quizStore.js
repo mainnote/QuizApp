@@ -55,11 +55,29 @@ const Reducer = ( state, action ) => {
                 ...all_values,
             };
             // set current index
-            // set the first chapter
+            // set the first chapter if the current_index is not set
             let chapters = findChapters( newState, action.quizId );
             newState.current_index.quizzes = action.quizId;
-            if ( chapters.length > 0 )
-                newState.current_index.chapters = chapters[ 0 ].id;
+            // check if the results for its latest chapter
+            // if no results for this quiz, choose the first chapter
+            if ( chapters.length > 0 ) {
+                let lastestChapter, lastChapter;
+                // if the chapter do not have result, set as the current chapter
+                for (const chapter of chapters) {
+                    if (newState.chapter_results.hasOwnProperty(chapter.id) ) {
+                        lastChapter = chapter.id;
+                    } else {
+                        lastestChapter = chapter.id;
+                        break;
+                    }
+                }
+                if (lastestChapter || lastChapter) {
+                    newState.current_index.chapters = lastestChapter || lastChapter;    
+                } else {
+                    newState.current_index.chapters = chapters[ 0 ].id;
+                }
+            }
+                
 
             return newState;
         case ACTION_TYPE.UPDATE_INIT_INDICE:
