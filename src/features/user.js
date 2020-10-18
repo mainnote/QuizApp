@@ -2,9 +2,12 @@ import React, { useContext, useState } from 'react';
 import { LOG, REGISTER_URL, LOGIN_URL } from '../config';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button, Nav, Form } from 'react-bootstrap';
+import { Context as QuizContext, ACTION_TYPE as ACTION_TYPE_QUIZ, } from '../stores/quizStore';
 import { Context as UserContext, ACTION_TYPE as ACTION_TYPE_USER, } from '../stores/userStore';
 import validator from 'email-validator';
 import { requestPost } from '../stores/request';
+import { fetchResultAPI } from '../stores/util';
+import { isArray } from 'lodash';
 
 export default function ( props ) {
     const [ email, setEmail ] = useState( "" );
@@ -15,8 +18,8 @@ export default function ( props ) {
     const [ passwordlAgainMsg, setPasswordAgainMsg ] = useState( "" );
     const [ passwordAgain, setPasswordAgain ] = useState( "" );
     const [ messages, setMessages ] = useState( [] );
-    LOG( 'DEBUG: Rendering user.js for login/signup' );
     const { t } = useTranslation();
+    const [ stateQuiz, dispatchQuiz ] = useContext( QuizContext );
     const [ stateUser, dispatchUser ] = useContext( UserContext );
     const onHide = event => {
         dispatchUser( {
@@ -57,11 +60,9 @@ export default function ( props ) {
                 username: username,
                 password: password,
             } ).then( res => {
-                LOG( res );
                 afterPost( res );
                 clearForm();
             } ).catch( error => {
-                LOG( 'signup error: ', error.response.data );
                 showErrorMessage( error.response.data.message[ 0 ].messages );
             } );
         } else {
@@ -69,11 +70,16 @@ export default function ( props ) {
                 identifier: email,
                 password: password,
             } ).then( res => {
-                LOG( res );
-                afterPost( res );
-                clearForm();
+                // load results from server
+                return fetchResultAPI( res.data.jwt ).then( results => {
+                    afterPost( res );
+                    clearForm();
+                    dispatchQuiz( {
+                        type: ACTION_TYPE_QUIZ.ADD_RESULT,
+                        data: results.data,
+                    } );
+                } );
             } ).catch( error => {
-                LOG( 'login error: ', error.response.data );
                 showErrorMessage( error.response.data.message[ 0 ].messages );
             } );
         }
@@ -178,12 +184,16 @@ export default function ( props ) {
                     }
                     <div>
                         {
-                            messages.map( message => (
-                                <Form.Text className="text-danger" key={ message.id }>
-                                    { t( message.id ) }
+                            isArray( messages ) ?
+                                messages.map( message => (
+                                    <Form.Text className="text-danger" key={ message.id }>
+                                        { t( message.id ) }
+                                    </Form.Text>
+                                )
+                                ) :
+                                <Form.Text className="text-danger">
+                                    { t( 'system_error' ) }
                                 </Form.Text>
-                            )
-                            )
                         }
                     </div>
                     <div className="d-flex">

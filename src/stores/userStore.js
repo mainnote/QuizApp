@@ -14,8 +14,6 @@ const ACTION_TYPE = {
 };
 
 const Reducer = ( state, action ) => {
-    LOG( 'Reducer: users, action: ', action );
-
     switch ( action.type ) {
         case ACTION_TYPE.UPDATE:
             // add each key

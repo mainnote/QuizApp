@@ -1,20 +1,23 @@
-body {
-  font-family: 'Noto Sans SC', 'Roboto'!important;
+input[type="password"] {
+  font-family: auto;
 }
 
 .page-top {
   margin-top: 60px;
 }
+
 .main {
   min-height: 60vh;
 }
 
-.main > .container {
+.main>.container {
   background-color: #ffffffb5;
 }
+
 .loader {
   text-align: center;
 }
+
 p {
   word-wrap: break-word;
 }

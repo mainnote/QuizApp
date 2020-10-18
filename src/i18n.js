@@ -43,7 +43,8 @@ const resources = {
             'username': '用户名',
             'invlid_username': '无效的用户名',
             'Auth.form.error.email.taken': '电子邮箱已经注册了。',
-            'Auth.form.error.invalid': '登录信息不正确。'
+            'Auth.form.error.invalid': '登录信息不正确。',
+            'system_error': '系统错误，请稍后再试。',
         }
     }
 };

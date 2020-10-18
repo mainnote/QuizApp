@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import './menu.css';
 import { Context as UserContext, ACTION_TYPE as ACTION_TYPE_USER, } from '../stores/userStore';
+import { Context as QuizContext, ACTION_TYPE as ACTION_TYPE_QUIZ, } from '../stores/quizStore';
 import { getWebsiteState } from '../stores/util';
 import { Context as WebsiteContext } from '../stores/websiteStore';
 
@@ -17,16 +18,18 @@ export default function ( props ) {
     };
     const location = useLocation();
     const pathname = location.pathname;
-    LOG( 'DEBUG: (menu.js) Rendering menu with pathname:', pathname );
     const { t } = useTranslation();
+    const [ stateQuiz, dispatchQuiz ] = useContext( QuizContext );
     const [ stateUser, dispatchUser ] = useContext( UserContext );
-    LOG( 'DEBUG: stateUser:', stateUser );
     const handleLogoutButtonClick = event => {
         event.preventDefault();
         handleNavCollapse();
         dispatchUser( {
             type: ACTION_TYPE_USER.RESET
         } );
+        dispatchQuiz({
+            type: ACTION_TYPE_QUIZ.CLEAR_RESULT,
+        });
     };
     const handleLoginButtonClick = event => {
         event.preventDefault();

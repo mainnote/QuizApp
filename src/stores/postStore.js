@@ -12,8 +12,6 @@ const ACTION_TYPE = {
 };
 
 const Reducer = ( state, action ) => {
-    LOG( 'Reducer: posts, action: ', action );
-
     switch ( action.type ) {
         case ACTION_TYPE.ADD:
             let values = [];

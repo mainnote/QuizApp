@@ -19,9 +19,7 @@ export default function ( props ) {
     const { t } = useTranslation();
     const [ stateQuiz, dispatchQuiz ] = useContext( QuizContext );
     const [ stateUser, dispatchUser ] = useContext( UserContext );
-    LOG( 'DEBUG: (quiz.js) Rednering quiz...' );
     let { quiz_id } = useParams();
-    console.log( quiz_id );
 
     useEffect( () => {
         if ( !stateUser.user ) {
@@ -37,8 +35,6 @@ export default function ( props ) {
     useEffect( () => {
         loadQuizFull( stateQuiz, dispatchQuiz, quiz_id );
     }, [ quiz_id ] );
-
-    LOG('Before: stateQuiz = ', stateQuiz);
     
     const [ survey_json, nextChapter ] = stateToSurveyJS( stateQuiz );
     let content;
@@ -63,12 +59,10 @@ export default function ( props ) {
         // this chapter is completed
         if ( stateQuiz.current_result ) {
             model.mode = 'display';
-            LOG( "Result:", stateQuiz.current_result );
             model.data = stateQuiz.current_result;
             model.questionsOnPageMode = "singlePage";
             model.onAfterRenderQuestion
                 .add( function ( survey, options ) {
-                    LOG( 'After rendering question....' );
                     var span = document.createElement( "span" );
                     var isCorrect = options.question.isAnswerCorrect();
                     span.innerHTML = isCorrect ? ` (${ t( 'right' ) })` : ` (${ t( 'wrong' ) })`;
@@ -159,7 +153,6 @@ export default function ( props ) {
                 console.log( result.data );
                 // save it to server
                 if ( stateUser.jwt ) {
-                    LOG('sending results...');
                     sendResultAPI( stateUser.jwt, {
                         chapter: stateQuiz.current_index.chapters,
                         value: result.data,

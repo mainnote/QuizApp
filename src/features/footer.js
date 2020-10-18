@@ -13,13 +13,10 @@ const getYear = () => {
 
 export default function ( props ) {
     const [ stateWebsite, dispatchWebsite ] = useContext( WebsiteContext );
-    LOG( 'DEBUG: Rendering footer' );
-    LOG( 'stateWebsite:', stateWebsite );
     const { t } = useTranslation();
 
     // load post
     useEffect( () => {
-        LOG( 'Calling use effect...' );
         requestGetWithDispatch( dispatchWebsite, API_ALL_WEBSITE, ACTION_TYPE_WEBSITE.ADD, 'website' );
     }, [] );
 

@@ -1,5 +1,5 @@
 import { createStore } from './createStore';
-import { findChapters } from './util';
+import { updateCurrentChapter } from './util';
 import { LOG } from '../config';
 
 const initialState = {
@@ -24,12 +24,11 @@ const ACTION_TYPE = {
     SET_CURRENT_RESULT: 'SET_IS_COMPLETED',
     RESET: 'RESET',
     SET_NEXT_CHAPTER: 'SET_NEXT_CHAPTER',
+    ADD_RESULT: 'ADD_RESULT',
+    CLEAR_RESULT: 'CLEAR_RESULT',
 };
 
 const Reducer = ( state, action ) => {
-    LOG( 'Reducer: quizzes, action: ', action );
-    LOG( 'Reducer: state: ', state );
-
     switch ( action.type ) {
         case ACTION_TYPE.ADD:
             let values = [];
@@ -55,31 +54,9 @@ const Reducer = ( state, action ) => {
                 ...all_values,
             };
             // set current index
-            // set the first chapter if the current_index is not set
-            let chapters = findChapters( newState, action.quizId );
             newState.current_index.quizzes = action.quizId;
-            // check if the results for its latest chapter
-            // if no results for this quiz, choose the first chapter
-            if ( chapters.length > 0 ) {
-                let lastestChapter, lastChapter;
-                // if the chapter do not have result, set as the current chapter
-                for (const chapter of chapters) {
-                    if (newState.chapter_results.hasOwnProperty(chapter.id) ) {
-                        lastChapter = chapter.id;
-                    } else {
-                        lastestChapter = chapter.id;
-                        break;
-                    }
-                }
-                if (lastestChapter || lastChapter) {
-                    newState.current_index.chapters = lastestChapter || lastChapter;    
-                } else {
-                    newState.current_index.chapters = chapters[ 0 ].id;
-                }
-            }
-                
+            return updateCurrentChapter( newState );
 
-            return newState;
         case ACTION_TYPE.UPDATE_INIT_INDICE:
             // add each key
             let all_index_values = {};
@@ -118,7 +95,7 @@ const Reducer = ( state, action ) => {
                 current_result: action.value,
                 chapter_results: {
                     ...state.chapter_results,
-                    [state.current_index.chapters]: action.value,
+                    [ state.current_index.chapters ]: action.value,
                 },
             };
         case ACTION_TYPE.SET_NEXT_CHAPTER:
@@ -129,6 +106,21 @@ const Reducer = ( state, action ) => {
                     chapters: action.nextChapter,
                 },
                 current_result: null,
+            };
+        case ACTION_TYPE.ADD_RESULT:
+            let chapter_results = state.chapter_results;
+            action.data.forEach( result => {
+                chapter_results[ result.chapter.id ] = result.value;
+            } );
+            return updateCurrentChapter( {
+                ...state,
+                chapter_results: chapter_results
+            } );
+        case ACTION_TYPE.CLEAR_RESULT:
+            return {
+                ...state,
+                current_result: null,
+                chapter_results: {},
             };
         default:
             return state;

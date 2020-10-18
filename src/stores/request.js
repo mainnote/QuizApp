@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // remote with API
-const requestGet = ( url ) => {
-    return axios.get( url );
+const requestGet = ( url, config ) => {
+    return axios.get( url, config || {} );
 };
 
 const requestGetWithDispatch = ( dispatch, url, type, key ) => {

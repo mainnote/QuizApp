@@ -21,22 +21,16 @@ export default function ( props ) {
         }
         searchString = location.search;
     }
-    LOG( 'post_id or search: ', post_id || searchString );
 
     // lookup cache
     let post = statePost.posts.find( post => post.id === post_id );
     let found = post ? true : false;
-    LOG( 'statePost:', statePost );
-    LOG( 'post:', post );
 
     // load post
     useEffect( () => {
-        LOG('Calling use effect...');
         if ( !found )
             requestGetWithDispatch( dispatchPost, API_ALL_POSTS + ( post_id || searchString ), ACTION_TYPE_POST.ADD, 'posts' );
     }, [ post_id, found, searchString ] );
-
-    LOG( 'Rendering content page.' );
 
     return (
         <div className="container overflow-hidden p-4">

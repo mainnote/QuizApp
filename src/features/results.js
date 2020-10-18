@@ -18,7 +18,6 @@ export default function ( props ) {
     const [ state, dispatch ] = useContext( QuizContext );
 
     let { quiz_id } = useParams(); // post_id will be first priority than contentKey
-    LOG( 'quiz_id: ', quiz_id );
     
     // load related data for this quiz
     useEffect( () => {
