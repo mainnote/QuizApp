@@ -101,8 +101,11 @@ const Reducer = ( state, action ) => {
                 chapter_results: {
                     ...state.chapter_results,
                     [state.current_index.chapters]: action.value,
+                    
                 },
             };
+            
+
         case ACTION_TYPE.SET_NEXT_CHAPTER:
             return {
                 ...state,

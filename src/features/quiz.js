@@ -28,6 +28,7 @@ export default function ( props ) {
 
     const [ survey_json, nextChapter ] = stateToSurveyJS( state );
     let content;
+    
 
     if ( isEmpty( survey_json ) ) {
         content = (
@@ -41,6 +42,8 @@ export default function ( props ) {
         );
     } else {
         const model = new Survey.Model( survey_json );
+        console.log(model)
+        console.log(state)
         model.locale = 'zh-cn';
         model.onTextMarkdown.add( function ( survey, options ) {
             options.html = options.text;
@@ -128,6 +131,7 @@ export default function ( props ) {
                             </label>
                             <span className="ml-2 text-secondary">{ t( 'wrong_answers' ) }</span>
                         </div>
+                        
 
                     </div>
                     <Survey.Survey
@@ -141,12 +145,20 @@ export default function ( props ) {
                 console.log( "value changed!" );
             };
 
-            const onComplete = ( result ) => {
-                console.log( result.data );
-                dispatch( {
+            const onComplete = ( result, isCorrect ) => {
+                if (isCorrect){
+                    dispatch( {
                     type: ACTION_TYPE.SET_CURRENT_RESULT,
                     value: result.data,
-                } );
+                })
+                
+                }else{
+                    dispatch({
+                        type: ACTION_TYPE.SET_CURRENT_RESULT,
+                        value: result.data,
+                    })
+                }
+                console.log('here is the state', state)
             };
             content = (
                 <Survey.Survey

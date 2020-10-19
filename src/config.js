@@ -2,7 +2,7 @@ export const DEBUG = process.env.REACT_APP_DEBUG;
 export const LOG = (...messages) => {
     if (DEBUG) console.log(...messages);
 };
-export const DEBUG_NUM = 1;
+export const DEBUG_NUM = 5;
 
 export const BASE_API = process.env.REACT_APP_BASE_API;
 
