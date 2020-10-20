@@ -2,40 +2,37 @@ import { createStore } from './createStore';
 import { LOG } from '../config';
 
 const initialState = {
-    posts: [],
+    jwt: null,
+    user: null,
+    show: false,
+    isSignup: false,
 };
 
 const ACTION_TYPE = {
-    ADD: 'ADD',
-    ADD_ALL: 'ADD_ALL',
+    UPDATE: 'UPDATE',
     RESET: 'RESET',
 };
 
 const Reducer = ( state, action ) => {
     switch ( action.type ) {
-        case ACTION_TYPE.ADD:
-            let values = [];
-            if ( Array.isArray( action.data ) ) {
-                values = [ ...state[ action.key ], ...action.data ];
-            } else {
-                values = [ ...state[ action.key ], action.data ];
-            }
-
-            return {
-                ...state,
-                [ action.key ]: values,
-            };
-        case ACTION_TYPE.ADD_ALL:
+        case ACTION_TYPE.UPDATE:
             // add each key
             let all_values = {};
             action.keys.forEach( ( key, index ) => {
-                all_values[ key ] = [ ...state[ key ], ...action.data[ index ] ];
+                all_values[ key ] = action.data[ index ];
             } );
 
             return {
                 ...state,
                 ...all_values,
-            }
+            };
+        case ACTION_TYPE.RESET:
+            return {
+                jwt: null,
+                user: null,
+                show: false,
+                isSignup: false,
+            };
         default:
             return state;
     }

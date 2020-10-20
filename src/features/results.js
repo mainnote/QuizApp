@@ -18,17 +18,30 @@ export default function ( props ) {
     const [ state, dispatch ] = useContext( QuizContext );
 
     let { quiz_id } = useParams(); // post_id will be first priority than contentKey
-    LOG( 'quiz_id: ', quiz_id );
     
     // load related data for this quiz
     useEffect( () => {
         loadQuizFull( state, dispatch, quiz_id );
     }, [ quiz_id ] );
 
+    var marks = state.chapter_correct_counter;
+
     return (
-        <div className="container">
+        <div className="container overflow-hidden">
+
             <div>
-                <XYPlot width={ 600 } height={ 300 } yType="ordinal" xDomain={ [ 0, 100 ] }>
+                <h4>
+                    旧约题目测试总分
+                </h4>
+                
+                {
+                    marks.map(function(mark, index){
+                        return <p key={index++}>Chapter {index++} : {mark} points</p>
+                })}         
+            </div>
+
+            <div>
+                <XYPlot width={ 300 } height={ 300 } yType="ordinal" xDomain={ [ 0, 100 ] }>
                     <VerticalGridLines />
                     <XAxis />
                     <YAxis />
