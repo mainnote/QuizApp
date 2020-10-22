@@ -14,7 +14,6 @@ const initialState = {
     },
     current_result: null, // here the result is the answer of each question
     chapter_results: {}, // here the result is the answer of each question
-    chapter_correct_counter: []
 };
 
 const ACTION_TYPE = {
@@ -98,7 +97,6 @@ const Reducer = ( state, action ) => {
                     ...state.chapter_results,
                     [ state.current_index.chapters ]: action.value,
                 },
-                chapter_correct_counter: state.chapter_correct_counter.concat(action.correct_num)
             };
             
 

@@ -37,7 +37,7 @@ const resources = {
             'email': '电子邮箱',
             'password': '密码',
             'password_again': '再输入密码',
-            'login_reason': '登录后可以保存测试的结果。谢谢您的帮助！', 
+            'login_reason': '登录后可以保存测试的结果。谢谢您的帮助！',
             'invalid_email': '电子邮箱输入不正确',
             'password_not_same': '输入的密码不一致',
             'username': '用户名',
@@ -45,6 +45,17 @@ const resources = {
             'Auth.form.error.email.taken': '电子邮箱已经注册了。',
             'Auth.form.error.invalid': '登录信息不正确。',
             'system_error': '系统错误，请稍后再试。',
+            'old_testament_marks': '旧约题目测试总分',
+            'new_testament_marks': '新约题目测试总分',
+            'all_testament_marks': '整本圣经测试分数',
+            'category': '测试题目分类',
+            'no_correct_answer': '回答正确数量',
+            'old_testament_marks_total': '旧约测试题目回答正确数量汇总',
+            'new_testament_marks_total': '新约测试题目回答正确数量汇总',
+            'all_testament_marks_total': '新旧约测试题目正确总数量',
+            'unit': '题',
+            'points': '分',
+            'all_categories_chart': '分类图表',
         }
     }
 };

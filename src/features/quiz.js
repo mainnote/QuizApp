@@ -160,16 +160,11 @@ export default function ( props ) {
                         value: result.data,
                     } );
                 }
-                console.log(stateUser)
-                
 
                 dispatchQuiz( {
                     type: ACTION_TYPE_QUIZ.SET_CURRENT_RESULT,
                     value: result.data,
-                    correct_num: model.getCorrectedAnswerCount()
                 })
-                console.log(stateQuiz)
-                
             };
             content = (
                 <Survey.Survey

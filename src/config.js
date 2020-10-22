@@ -1,8 +1,8 @@
-export const DEBUG = (process.env.REACT_APP_DEBUG === 'true');
-export const LOG = (...messages) => {
-    if (DEBUG) console.log(...messages);
+export const DEBUG = ( process.env.REACT_APP_DEBUG === 'true' );
+export const LOG = ( ...messages ) => {
+    if ( DEBUG ) console.log( ...messages );
 };
-export const DEBUG_NUM = 5;
+export const DEBUG_NUM = 3;
 
 export const BASE_API = process.env.REACT_APP_BASE_API;
 
@@ -16,3 +16,6 @@ export const API_ALL_RESULTS = BASE_API + 'results/';
 
 export const REGISTER_URL = BASE_API + 'auth/local/register';
 export const LOGIN_URL = BASE_API + 'auth/local';
+
+export const OLD_TESTAMENT = "旧约";
+export const NEW_TESTAMENT = "新约";

@@ -2,20 +2,21 @@ import { template } from 'lodash';
 import {
     DEBUG, LOG, DEBUG_NUM,
     API_ALL_QUIZZES, API_ALL_CHAPTERS, API_ALL_QUESTIONS,
-    API_ALL_BOOKS, API_ALL_RESULTS,
+    API_ALL_BOOKS, API_ALL_RESULTS, OLD_TESTAMENT, NEW_TESTAMENT,
 } from '../config';
 import { requestGet, requestPost } from '../stores/request';
 import { ACTION_TYPE, } from '../stores/quizStore';
+import { isEqual, sortBy, map, concat } from 'lodash';
 
 const chapterHtml = template( '<h5><%= title %></h5><p><%= duration %></p><p><%= reminds %></p><div class="h6"><%= description %></div>' );
 const findChapters = ( state ) => {
     return state.chapters.filter( c => c.quiz.id === state.current_index.quizzes ).sort( ( a, b ) => a.chapter_no - b.chapter_no );
 };
 
-const findNextChapter = ( state, quiz_id ) => {
+const findNextChapter = ( state ) => {
     let chapter_id = state.current_index.chapters;
 
-    let chapters = findChapters( state, quiz_id );
+    let chapters = findChapters( state );
     let isNext = false;
     chapters.forEach( c => {
         if ( c.id === chapter_id ) {
@@ -188,7 +189,6 @@ const fetchResultAPI = ( jwt ) => {
 };
 
 const updateCurrentChapter = ( stateQuiz ) => {
-    // set the first chapter if the current_index is not set
     let chaptersWithResult = findChapters( stateQuiz );
 
     // check if the results for its latest chapter
@@ -215,8 +215,113 @@ const updateCurrentChapter = ( stateQuiz ) => {
     return stateQuiz;
 };
 
+const getCurrentResultSummary = state => {
+    let result = {
+        old_testament: { categories: {}, total: { mark: 0, label: 'old_testament_marks_total', count: 0 } },
+        new_testament: { categories: {}, total: { mark: 0, label: 'new_testament_marks_total', count: 0 } },
+        all_testaments: {
+            categories: {
+                [ OLD_TESTAMENT ]: { mark: 0, label: OLD_TESTAMENT, count: 0 },
+                [ NEW_TESTAMENT ]: { mark: 0, label: NEW_TESTAMENT, count: 0 },
+            },
+            total: { mark: 0, label: 'all_testament_marks_total', count: 0 }
+        },
+    };
+    // find the current quiz and all chapters
+    // go to find all questions from each chapters and see if there is a correct answer or not
+    // now add the question mark to its categories which belong to 3 tables (old, new and all)
+    // return the final result to the result file e.g. for each category: { mark: 0, label: 'king', count: 60 }
+    let books = {};
+    let old_categories = {};
+    let new_categories = {};
+
+    state.books.forEach( book => {
+        books[ book.id ] = book;
+        switch ( book.testament.title ) {
+            case OLD_TESTAMENT:
+                if ( !old_categories.hasOwnProperty( book.category.id ) )
+                    old_categories[ book.category.id ] = { mark: 0, label: book.category.title, count: 0 };
+                break;
+            case NEW_TESTAMENT:
+                if ( !new_categories.hasOwnProperty( book.category.id ) )
+                    new_categories[ book.category.id ] = { mark: 0, label: book.category.title, count: 0 };
+                break;
+            default:
+                break;
+        }
+    } );
+
+    result.old_testament.categories = old_categories;
+    result.new_testament.categories = new_categories;
+
+    // start looping through each questions to find the marks
+    let chapters = findChapters( state );
+    chapters.forEach( c => {
+        let questions = state.questions.filter( q => q.chapter.id === c.id ).sort( ( a, b ) => a.question_no - b.question_no );
+        if ( DEBUG ) questions = questions.slice( 0, DEBUG_NUM );
+
+        questions.forEach( q => {
+            let correctAnswer = [];
+
+            q.choice.forEach( i => {
+                if ( i.is_answer ) correctAnswer.push( i.choice_symbol );
+            } );
+
+            if ( q.books && q.books.length > 0 ) {
+                let bookOfQuestion = books[ q.books[ 0 ].id ];
+                let resultTestament, resultCategory, resultAllCategory;
+                switch ( bookOfQuestion.testament.title ) {
+                    case OLD_TESTAMENT:
+                        resultTestament = result.old_testament;
+                        resultAllCategory = result.all_testaments.categories[ OLD_TESTAMENT ];
+                        break;
+                    case NEW_TESTAMENT:
+                        resultTestament = result.new_testament;
+                        resultAllCategory = result.all_testaments.categories[ NEW_TESTAMENT ];
+                        break;
+                    default:
+                        resultTestament = null;
+                }
+
+                resultTestament.total.count++;
+                result.all_testaments.total.count++;
+                resultCategory = resultTestament.categories[ bookOfQuestion.category.id ];
+                resultCategory.count++;
+                resultAllCategory.count++;
+
+                if ( state.chapter_results.hasOwnProperty( c.id ) && state.chapter_results[ c.id ].hasOwnProperty( q.question_no ) ) {
+                    if ( isEqual( sortBy( correctAnswer ), sortBy( state.chapter_results[ c.id ][ q.question_no ] ) ) ) {
+                        resultCategory.mark++;
+                        resultTestament.total.mark++;
+                        result.all_testaments.total.mark++;
+                        resultAllCategory.mark++;
+                    }
+                }
+            }
+        } );
+    } );
+
+    // convert object to array for category
+    result.old_testament.categories = map( result.old_testament.categories, c => c );
+    result.new_testament.categories = map( result.new_testament.categories, c => c );
+    result.all_testaments.categories = map( result.all_testaments.categories, c => c );
+
+    return result;
+};
+
+function getPoints( total ) {
+    let p = 1.0 * total.mark / total.count * 100;
+    return p ? p : 0;
+}
+
+function getSeries( marks ) {
+    return concat( marks.old_testament.categories, marks.new_testament.categories )
+        .map( c => ( { y: c.label, x: c.count ? 1.0 * c.mark / c.count * 100 : 0 } ) ).reverse();
+}
+
 export {
     stateToSurveyJS, findChapters, findNextChapter,
     loadQuizFull, getWebsiteState, sendResultAPI,
-    fetchResultAPI, updateCurrentChapter,
+    fetchResultAPI, updateCurrentChapter, getCurrentResultSummary,
+    getPoints, getSeries
 };
