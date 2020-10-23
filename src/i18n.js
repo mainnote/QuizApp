@@ -25,6 +25,7 @@ const resources = {
             'new_post': '最新推荐阅读',
             'next_chapter': '继续测试下一节',
             'redo': '重新测试这一节',
+            'redo_all': '重新整遍测试',
             'all_answers': '显示所有答案',
             'wrong_answers': '仅显示错误答案',
             'result_text': '共<%= total %>题目里，答对了<%= corrected %>道题。',
@@ -56,6 +57,7 @@ const resources = {
             'unit': '题',
             'points': '分',
             'all_categories_chart': '分类图表',
+            'total_tested_user': '参加测试人数总共有：',
         }
     }
 };

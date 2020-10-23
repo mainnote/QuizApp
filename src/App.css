@@ -21,3 +21,13 @@ input[type="password"] {
 p {
   word-wrap: break-word;
 }
+
+button.right-radius-none {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+button.left-radius-none {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

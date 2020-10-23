@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import * as Survey from 'survey-react';
 import "survey-react/survey.css";
-import { DEBUG, LOG } from '../config';
-import ShowJSON from './showJson';
 import { Context as QuizContext, ACTION_TYPE as ACTION_TYPE_QUIZ, } from '../stores/quizStore';
 import { Context as UserContext, ACTION_TYPE as ACTION_TYPE_USER, } from '../stores/userStore';
 import { useParams } from "react-router-dom";
@@ -35,10 +33,9 @@ export default function ( props ) {
     useEffect( () => {
         loadQuizFull( stateQuiz, dispatchQuiz, quiz_id );
     }, [ quiz_id ] );
-    
+
     const [ survey_json, nextChapter ] = stateToSurveyJS( stateQuiz );
     let content;
-    
 
     if ( isEmpty( survey_json ) ) {
         content = (
@@ -122,13 +119,19 @@ export default function ( props ) {
                             }
                         </div>
                         <div className="col-md text-center m-2">
-                            <button className="btn btn-outline-secondary" onClick={ () => {
+                            <button className="btn btn-outline-secondary right-radius-none" onClick={ () => {
                                 dispatchQuiz( {
                                     type: ACTION_TYPE_QUIZ.SET_CURRENT_RESULT,
                                     value: null,
                                 } );
 
                             } }>{ t( 'redo' ) }</button>
+                            <button className="btn btn-outline-secondary left-radius-none" onClick={ () => {
+                                dispatchQuiz( {
+                                    type: ACTION_TYPE_QUIZ.RESET_CHAPTER_RESULT,
+                                } );
+
+                            } }>{ t( 'redo_all' ) }</button>
                         </div>
                         <div className="col-md text-center m-2">
                             <label className="switch">
@@ -137,7 +140,7 @@ export default function ( props ) {
                             </label>
                             <span className="ml-2 text-secondary">{ t( 'wrong_answers' ) }</span>
                         </div>
-                        
+
 
                     </div>
                     <Survey.Survey
@@ -148,7 +151,6 @@ export default function ( props ) {
             );
         } else {
             const onValueChanged = ( result ) => {
-                LOG( "value changed!" );
             };
 
             const onComplete = ( result ) => {
@@ -164,7 +166,7 @@ export default function ( props ) {
                 dispatchQuiz( {
                     type: ACTION_TYPE_QUIZ.SET_CURRENT_RESULT,
                     value: result.data,
-                })
+                } )
             };
             content = (
                 <Survey.Survey
@@ -178,7 +180,6 @@ export default function ( props ) {
     return (
         <div className="container overflow-hidden p-4">
             { content }
-            { false && <ShowJSON data={ stateQuiz.questions } /> }
         </div>
     );
 };

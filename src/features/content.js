@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { requestGetWithDispatch } from '../stores/request';
-import { LOG, API_ALL_POSTS } from '../config';
+import { API_ALL_POSTS } from '../config';
 import { useParams, useLocation } from "react-router-dom";
 import { Context as PostContext, ACTION_TYPE as ACTION_TYPE_POST, } from '../stores/postStore';
 

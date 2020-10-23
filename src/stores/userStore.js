@@ -1,5 +1,4 @@
 import { createStore } from './createStore';
-import { LOG } from '../config';
 
 const initialState = {
     jwt: null,

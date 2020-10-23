@@ -1,12 +1,14 @@
 import { template } from 'lodash';
 import {
-    DEBUG, LOG, DEBUG_NUM,
+    DEBUG, DEBUG_NUM,
     API_ALL_QUIZZES, API_ALL_CHAPTERS, API_ALL_QUESTIONS,
     API_ALL_BOOKS, API_ALL_RESULTS, OLD_TESTAMENT, NEW_TESTAMENT,
+    API_STATISTICS,
 } from '../config';
-import { requestGet, requestPost } from '../stores/request';
-import { ACTION_TYPE, } from '../stores/quizStore';
+import { requestGet, requestPost, requestGetWithDispatch } from '../stores/request';
+import { ACTION_TYPE as ACTION_TYPE_QUIZ, } from '../stores/quizStore';
 import { isEqual, sortBy, map, concat } from 'lodash';
+import { ACTION_TYPE as ACTION_TYPE_WEBSITE } from './websiteStore';
 
 const chapterHtml = template( '<h5><%= title %></h5><p><%= duration %></p><p><%= reminds %></p><div class="h6"><%= description %></div>' );
 const findChapters = ( state ) => {
@@ -154,7 +156,7 @@ const loadQuizFull = ( state, dispatch, quiz_id ) => {
                 return loadChapters( quiz_id ).then( res1 => {
                     return loadQuestions( quiz_id ).then( res2 => {
                         dispatch( {
-                            type: ACTION_TYPE.ADD_ALL,
+                            type: ACTION_TYPE_QUIZ.ADD_ALL,
                             quizId: quiz_id,
                             keys: [ 'books', 'quizzes', 'chapters', 'questions' ],
                             data: [ res_books.data, res0.data, res1.data, res2.data ],
@@ -189,14 +191,14 @@ const fetchResultAPI = ( jwt ) => {
 };
 
 const updateCurrentChapter = ( stateQuiz ) => {
-    let chaptersWithResult = findChapters( stateQuiz );
+    let chapters = findChapters( stateQuiz );
 
     // check if the results for its latest chapter
     // if no results for this quiz, choose the first chapter
-    if ( chaptersWithResult.length > 0 ) {
+    if ( chapters.length > 0 ) {
         let lastestChapter, lastChapter;
         // if the chapter do not have result, set as the current chapter
-        for ( const chapter of chaptersWithResult ) {
+        for ( const chapter of chapters ) {
             if ( stateQuiz.chapter_results.hasOwnProperty( chapter.id ) ) {
                 lastChapter = chapter.id;
             } else {
@@ -209,7 +211,7 @@ const updateCurrentChapter = ( stateQuiz ) => {
             if ( lastestChapter || lastChapter )
                 stateQuiz.current_result = stateQuiz.chapter_results[ lastestChapter || lastChapter ]
         } else {
-            stateQuiz.current_index.chapters = chaptersWithResult[ 0 ].id;
+            stateQuiz.current_index.chapters = chapters[ 0 ].id;
         }
     }
     return stateQuiz;
@@ -314,14 +316,22 @@ function getPoints( total ) {
     return p ? p : 0;
 }
 
+function shortenLabel( label ) {
+    return label.substring( 0, 4 ).replace( '—', '' );
+}
+
 function getSeries( marks ) {
     return concat( marks.old_testament.categories, marks.new_testament.categories )
-        .map( c => ( { y: c.label, x: c.count ? 1.0 * c.mark / c.count * 100 : 0 } ) ).reverse();
+        .map( c => ( { y: shortenLabel( c.label ), x: c.count ? 1.0 * c.mark / c.count * 100 : 0 } ) ).reverse();
+}
+
+function loadResult( dispatchWebsite ) {
+    requestGetWithDispatch( dispatchWebsite, API_STATISTICS, ACTION_TYPE_WEBSITE.ADD, 'statistics' );
 }
 
 export {
     stateToSurveyJS, findChapters, findNextChapter,
     loadQuizFull, getWebsiteState, sendResultAPI,
     fetchResultAPI, updateCurrentChapter, getCurrentResultSummary,
-    getPoints, getSeries
+    getPoints, getSeries, loadResult,
 };

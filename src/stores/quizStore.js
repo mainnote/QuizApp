@@ -1,6 +1,6 @@
 import { createStore } from './createStore';
-import { updateCurrentChapter } from './util';
-import { LOG } from '../config';
+import { updateCurrentChapter, findChapters } from './util';
+import { reduce } from 'lodash';
 
 const initialState = {
     quizzes: [],
@@ -19,13 +19,15 @@ const initialState = {
 const ACTION_TYPE = {
     ADD: 'ADD',
     ADD_ALL: 'ADD_ALL',
-    UPDATE_INIT_INDICE: 'UPDATE_INIT_INDICE',
-    UPDATE_CURRENT_INDEX: 'UPDATE_CURRENT_INDEX',
-    SET_CURRENT_RESULT: 'SET_IS_COMPLETED',
-    RESET: 'RESET',
+    // UPDATE_INIT_INDICE: 'UPDATE_INIT_INDICE',
+    // UPDATE_CURRENT_INDEX: 'UPDATE_CURRENT_INDEX',
+    SET_CURRENT_RESULT: 'SET_CURRENT_RESULT',
+    // RESET: 'RESET',
     SET_NEXT_CHAPTER: 'SET_NEXT_CHAPTER',
     ADD_RESULT: 'ADD_RESULT',
     CLEAR_RESULT: 'CLEAR_RESULT',
+    RESET_CHAPTER_RESULT: 'RESET_CHAPTER_RESULT',
+
 };
 
 const Reducer = ( state, action ) => {
@@ -56,39 +58,40 @@ const Reducer = ( state, action ) => {
             // set current index
             newState.current_index.quizzes = action.quizId;
             return updateCurrentChapter( newState );
-
-        case ACTION_TYPE.UPDATE_INIT_INDICE:
-            // add each key
-            let all_index_values = {};
-            action.keys.forEach( ( key, index ) => {
-                all_index_values[ key ] = action.indice_data[ index ];
-            } );
-
-            return {
-                ...state,
-                current_index: {
-                    ...state.current_index,
-                    ...all_index_values,
-                },
-            };
-        case ACTION_TYPE.UPDATE_CURRENT_INDEX:
-            return {
-                ...state,
-                current_index: {
-                    ...state.current_index,
-                    [ action.key ]: action.index,
-                },
-            };
-        case ACTION_TYPE.RESET:
-            return {
-                ...state,
-                [ action.key ]: [],
-                current_index: {
-                    ...state.current_index,
-                    [ action.key ]: -1,
-                },
-                current_result: null,
-            };
+        /*
+                case ACTION_TYPE.UPDATE_INIT_INDICE:
+                    // add each key
+                    let all_index_values = {};
+                    action.keys.forEach( ( key, index ) => {
+                        all_index_values[ key ] = action.indice_data[ index ];
+                    } );
+        
+                    return {
+                        ...state,
+                        current_index: {
+                            ...state.current_index,
+                            ...all_index_values,
+                        },
+                    };
+                case ACTION_TYPE.UPDATE_CURRENT_INDEX:
+                    return {
+                        ...state,
+                        current_index: {
+                            ...state.current_index,
+                            [ action.key ]: action.index,
+                        },
+                    };
+        
+                case ACTION_TYPE.RESET:
+                    return {
+                        ...state,
+                        [ action.key ]: [],
+                        current_index: {
+                            ...state.current_index,
+                            [ action.key ]: -1,
+                        },
+                        current_result: null,
+                    };             */
         case ACTION_TYPE.SET_CURRENT_RESULT:
             return {
                 ...state,
@@ -98,8 +101,6 @@ const Reducer = ( state, action ) => {
                     [ state.current_index.chapters ]: action.value,
                 },
             };
-            
-
         case ACTION_TYPE.SET_NEXT_CHAPTER:
             return {
                 ...state,
@@ -124,6 +125,18 @@ const Reducer = ( state, action ) => {
                 current_result: null,
                 chapter_results: {},
             };
+        case ACTION_TYPE.RESET_CHAPTER_RESULT:
+            let chapter_ids = findChapters( state ).map( c => c.id );
+            let new_chapter_results = reduce( state.chapter_results, ( acc, value, key ) => {
+                if ( !chapter_ids.includes( key ) ) acc[ key ] = value;
+                return acc;
+            }, {} );
+
+            return updateCurrentChapter( {
+                ...state,
+                current_result: null,
+                chapter_results: new_chapter_results,
+            } );
         default:
             return state;
     }

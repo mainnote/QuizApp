@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { LOG, REGISTER_URL, LOGIN_URL } from '../config';
+import { REGISTER_URL, LOGIN_URL } from '../config';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button, Nav, Form } from 'react-bootstrap';
 import { Context as QuizContext, ACTION_TYPE as ACTION_TYPE_QUIZ, } from '../stores/quizStore';

@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import clsx from 'clsx';
 import $ from 'jquery';
-import { LOG, } from '../config';
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import './menu.css';

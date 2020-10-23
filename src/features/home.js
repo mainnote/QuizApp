@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { DEBUG, LOG, API_ALL_QUIZZES, API_ALL_POSTS } from '../config';
+import { API_ALL_QUIZZES, API_ALL_POSTS } from '../config';
 import ShowJSON from './showJson';
 import { requestGetWithDispatch } from '../stores/request';
 import { Context as QuizContext, ACTION_TYPE as ACTION_TYPE_QUIZ, } from '../stores/quizStore';
@@ -67,7 +67,6 @@ export default function ( props ) {
                     }
                 </div>
             }
-            { false && <ShowJSON data={ statePost.posts } /> }
         </div>
     );
 };

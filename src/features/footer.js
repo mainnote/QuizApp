@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { requestGetWithDispatch } from '../stores/request';
-import { LOG, API_ALL_WEBSITE } from '../config';
+import { API_ALL_WEBSITE } from '../config';
 import './footer.css';
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';

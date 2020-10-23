@@ -1,9 +1,9 @@
 
 import { createStore } from './createStore';
-import { LOG } from '../config';
 
 const initialState = {
     website: null,
+    statistics: null,
 };
 
 const ACTION_TYPE = {
