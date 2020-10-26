@@ -7,6 +7,7 @@ import {
     YAxis,
     VerticalGridLines,
     HorizontalBarSeries,
+    LineSeries,
     makeWidthFlexible,
 } from 'react-vis';
 import { useTranslation } from 'react-i18next';

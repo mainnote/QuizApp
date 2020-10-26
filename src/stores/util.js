@@ -312,7 +312,7 @@ const getCurrentResultSummary = state => {
 };
 
 function getPoints( total ) {
-    let p = 1.0 * total.mark / total.count * 100;
+    let p = Math.ceil(1.0 * total.mark / total.count * 100);
     return p ? p : 0;
 }
 

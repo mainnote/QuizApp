@@ -1,8 +1,8 @@
-export const DEBUG = ( process.env.REACT_APP_DEBUG === 'true' );
+export const DEBUG = false // ( process.env.REACT_APP_DEBUG === 'true' );
 export const LOG = ( ...messages ) => {
     if ( DEBUG ) console.log( ...messages );
 };
-export const DEBUG_NUM = 1;
+export const DEBUG_NUM = 2;
 
 export const BASE_API = process.env.REACT_APP_BASE_API;
 

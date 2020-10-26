@@ -75,14 +75,18 @@ export default function ( props ) {
                         if ( options.question.getType() === "radiogroup" ) {
                             answers = [ answers ];
                         }
-                        for ( var i = 0; i < answers.length; i++ ) {
-                            var item = options
-                                .htmlElement.querySelector( 'input[value="' + answers[ i ] + '"]' );
-                            if ( !!item ) {
-                                item.parentElement.style.color = "green";
-                                item.parentElement.style.padding = '4px'
-                                item.parentElement.style.border = 'thick solid green';
+                        if ( answers ) {
+                            for ( var i = 0; i < answers.length; i++ ) {
+                                var item = options
+                                    .htmlElement.querySelector( 'input[value="' + answers[ i ] + '"]' );
+                                if ( !!item ) {
+                                    item.parentElement.style.color = "green";
+                                    item.parentElement.style.padding = '4px'
+                                    item.parentElement.style.border = 'thick solid green';
+                                }
                             }
+                        } else {
+                            console.log('!!!No Answers:', options);
                         }
                     } else {
                         if ( showWrong )
@@ -151,10 +155,10 @@ export default function ( props ) {
             );
         } else {
             const onValueChanged = ( result ) => {
+                // console.log('changed...')
             };
 
             const onComplete = ( result ) => {
-                console.log( result.data );
                 // save it to server
                 if ( stateUser.jwt ) {
                     sendResultAPI( stateUser.jwt, {

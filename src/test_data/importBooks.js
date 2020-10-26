@@ -36,7 +36,6 @@ async function run() {
         let cat_id = categoreis[cat.category]
         let test_id = testaments[cat.testament]
         for (const book of cat.books){
-            console.log(book)
             await putBook(test_id, cat_id, book, book_no)
             book_no++
         }

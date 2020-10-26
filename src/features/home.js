@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from 'react';
 import { API_ALL_QUIZZES, API_ALL_POSTS } from '../config';
-import ShowJSON from './showJson';
 import { requestGetWithDispatch } from '../stores/request';
 import { Context as QuizContext, ACTION_TYPE as ACTION_TYPE_QUIZ, } from '../stores/quizStore';
 import { Context as PostContext, ACTION_TYPE as ACTION_TYPE_POST, } from '../stores/postStore';
