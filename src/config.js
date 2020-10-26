@@ -1,4 +1,4 @@
-export const DEBUG = false // ( process.env.REACT_APP_DEBUG === 'true' );
+export const DEBUG = ( process.env.REACT_APP_DEBUG === 'true' );
 export const LOG = ( ...messages ) => {
     if ( DEBUG ) console.log( ...messages );
 };

@@ -322,7 +322,7 @@ function shortenLabel( label ) {
 
 function getSeries( marks ) {
     return concat( marks.old_testament.categories, marks.new_testament.categories )
-        .map( c => ( { y: shortenLabel( c.label ), x: c.count ? 1.0 * c.mark / c.count * 100 : 0 } ) ).reverse();
+        .map( c => ( { x: shortenLabel( c.label ), y: c.count ? 1.0 * c.mark / c.count * 100 : 0 } ) );
 }
 
 function loadResult( dispatchWebsite ) {

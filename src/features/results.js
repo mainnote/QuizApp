@@ -6,8 +6,8 @@ import {
     XAxis,
     YAxis,
     VerticalGridLines,
-    HorizontalBarSeries,
-    LineSeries,
+    HorizontalGridLines,
+    LineMarkSeries,
     makeWidthFlexible,
 } from 'react-vis';
 import { useTranslation } from 'react-i18next';
@@ -55,11 +55,12 @@ export default function ( props ) {
                     <div>
                         <h4>{ t( 'all_categories_chart' ) }</h4>
                         <div>
-                            <Plot className="m-auto" margin={ { left: 60 } } height={ 300 } yType="ordinal" xDomain={ [ 0, 100 ] }>
+                            <Plot className="m-auto" margin={ { left: 60 } } height={ 300 } xType="ordinal" yDomain={ [ 0, 100 ] }>
                                 <VerticalGridLines />
+                                <HorizontalGridLines />
                                 <XAxis />
                                 <YAxis />
-                                <HorizontalBarSeries data={ getSeries( marks ) } />
+                                <LineMarkSeries data={ getSeries( marks ) } />
                             </Plot>
                         </div>
                     </div>

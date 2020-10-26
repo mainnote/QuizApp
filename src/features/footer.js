@@ -37,7 +37,7 @@ export default function ( props ) {
                     </div>
                     <div>
                         <i className="fa fa-envelope" />
-                        <p><a href={ getWebsiteState( stateWebsite, 'email' ) || t( 'contact_email' ) }>{ getWebsiteState( stateWebsite, 'email' ) || t( 'contact_email' ) }</a></p>
+                        <p><a href={ 'mailto:' + ( getWebsiteState( stateWebsite, 'email' ) || t( 'contact_email' ) ) }>{ getWebsiteState( stateWebsite, 'email' ) || t( 'contact_email' ) }</a></p>
                     </div>
                 </div>
                 <div className="footer-right col-sm">
